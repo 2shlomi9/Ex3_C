@@ -5,7 +5,7 @@
 
 #define WORD 30
 #define LINE 256
-#define MAXLINES 6
+#define MAXLINES 250
 #define OPTION1 'a'
 #define OPTION2 'b'
 
@@ -78,7 +78,7 @@ int main(){
         }
     }
     int lines=0;
-    while( lines<MAXLINES && scanf("%c",&ch) && ch != '/0'){
+    while( lines<MAXLINES && scanf("%c",&ch) && ch != EOF){
         i=0;
         char line [LINE]="";
         while(ch != '\n')
