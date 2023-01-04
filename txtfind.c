@@ -78,7 +78,7 @@ int main(){
         }
     }
     int lines=0;
-    while( lines<MAXLINES && scanf("%c",&ch) && ch!'/0'){
+    while( lines<MAXLINES && scanf("%c",&ch) && ch != '/0'){
         i=0;
         char line [LINE]="";
         while(ch != '\n')
