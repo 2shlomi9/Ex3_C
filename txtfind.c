@@ -5,7 +5,7 @@
 
 #define WORD 30
 #define LINE 256
-#define MAXLINES 250
+#define MAXLINES 5
 #define OPTION1 'a'
 #define OPTION2 'b'
 
