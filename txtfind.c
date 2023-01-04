@@ -87,6 +87,9 @@ int main(){
             i++;
             scanf("%c",&ch);
         }
+        if(*line=='\n'){
+            break;
+        }
         applyLine(line,str,option);
         if(++lines>MAXLINES){
             break;
