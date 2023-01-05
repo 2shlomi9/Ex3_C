@@ -78,7 +78,7 @@ int main(){
         }
     }
     int lines=0;
-    while( lines<MAXLINES && scanf("%c",&ch)){
+    while( lines<MAXLINES && scanf("%c",&ch) && ch != EOF){
         i=0;
         char line [LINE]="";
         while(ch != '\n')
@@ -91,7 +91,7 @@ int main(){
             break;
         }
         applyLine(line,str,option);
-        if(ch == EOF)|| ++lines>MAXLINES){
+        if(++lines>MAXLINES){
             break;
         }
     }
