@@ -1,75 +1,101 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
-#define LEN 50
+#define WORD 30
+#define LINE 256
+#define MAXLINES 250
+#define OPTION1 'a'
+#define OPTION2 'b'
 
 int main(){
- 
-    int shift_element(int* arr, int i){
-        int n = *(arr+i);
-        for (int j=i; j>0; j--){
-            *(arr+j)=*(arr+j-1);
+
+    int checkWord(char *word, char*str){
+        int count = 0;
+        char* tmp = str;
+        char result[WORD]="";
+        if(strlen(str) != strlen(word) && strlen(str)+1 != strlen(word) ){
+            return 0;
         }
-        *arr=n;
-        return 0;
+        while(*word!= '\t' && *word!= '\n' && *word!= '\0' && *tmp!= '\t' && *tmp!= '\n' && *tmp!= '\0'){
+            if(*word==*tmp){
+                *(result+count)=*word;
+                tmp++;
+                count++;
+            }
+            word++;
+        }
+        return(strcmp(result,str)==0);
     }
 
-    int insertion_sort(int* arr, int len){
-        int count = 0;
-        for(int i=1; i<len; i++){
-            for(int j=i-1; j>=0; j--)
-            {
-                int *ptr=arr+j;
-                if(*ptr>*(arr+i)){
-                    count++;
-                    ptr --;
-                    if(j==0){
-                        shift_element((ptr+1),count);
-                        count = 0;
-                        break;
+    int applyLine(char*sentence, char*str, char c){
+        int ans=0;
+        char ptr[strlen(sentence)+1];
+        for(int i=0; i<strlen(sentence)+1; i++){
+            ptr[i] = *(sentence+i);
+        }
+        ptr[strlen(sentence)]=' ';
+        char *start, *end;
+        start = ptr;
+        end = ptr+'\0';
+        while (*end != '\0') {
+            if (*end == ' ') {
+                *end = '\0';
+                if(checkWord(start,str)){
+                    ans=1;
+                    if( c== OPTION2){
+                        printf("%s\n", start);
                     }
                 }
-                else{
-                    shift_element((ptr+1),count);
-                    count = 0;
-                    break;
-                }
+                start = end + 1;
+                end = start;
+            }
+            else {
+                end++;
             }
         }
-        return 0;
-    }
-
-    //main
-
-    int size = 0;
-    int capacity = 10;
-    int *numbers = malloc(capacity * sizeof(int));
-    if (numbers == NULL) {
-        fprintf(stderr, "Error: out of memory\n");
-        exit(1);
-    }
-
-    while (scanf("%d", &numbers[size]) == 1 && ++size < LEN) {
-        if (size == capacity) {
-            capacity *= 2;
-            numbers = realloc(numbers, capacity * sizeof(int));
-
-            if (numbers == NULL) {
-                fprintf(stderr, "Error: out of memory\n");
-                exit(1);
-            }
+        if(ans && c == OPTION1){
+            printf("%s\n",sentence);
         }
+        return ans;
     }
 
-    insertion_sort(numbers,size);
-    for(int j=0; j<size-1;j++)
+    char ch,option;
+    char str [WORD];
+    int i=0;
+    scanf("%c",&ch);
+    while(ch != ' ')
     {
-        printf("%d,",*(numbers+j));
+        str[i]=ch;
+        i++;
+        scanf("%c",&ch);
     }
-    printf("%d\n",*(numbers+size-1));
-    for (int i=0; i<LEN; i++)
-        free((numbers+i));
-    free(numbers);
+    scanf("%c",&option);
+    while( scanf("%c",&ch)) {
+        if (ch =='\n'){
+            break;
+        }
+    }
+    int lines=0;
+    while( lines<MAXLINES && scanf("%c",&ch) && ch != EOF){
+        i=0;
+        char line [LINE]="";
+        while(ch != '\n')
+        {
+            line[i]=ch;
+            i++;
+            scanf("%c",&ch);
+        }
+        if(*line=='\n'){
+            break;
+        }
+        applyLine(line,str,option);
+        if(++lines>MAXLINES){
+            break;
+        }
+    }
     return 0;
+
+
 }
