@@ -36,10 +36,10 @@ int main(){
             ptr[i] = *(sentence+i);
         }
         ptr[strlen(sentence)]=' ';
-        char *start, *end;
+        char *start= NULL, *end = NULL;
         start = ptr;
-        end = ptr+'\0';
-        while (*end != '\0') {
+        end =  &ptr[strlen(ptr)];
+        while (end!= NULL && *end != '\0') {
             if (*end == ' ') {
                 *end = '\0';
                 if(checkWord(start,str)){
