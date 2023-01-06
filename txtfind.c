@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 #define WORD 30
@@ -11,8 +9,9 @@
 
 char Line[LINE] = "";
 char Word[WORD] = "";
+char str[WORD] = "";
 
-int get_line(char str[]);
+int get_line();
 
 int getword(char word[]);
 
@@ -20,32 +19,32 @@ int substring(char * str1, char * str2);
 
 int similar(char *s, char *t, int n);
 
-void print_lines(char * str);
+void print_lines();
 
-void print_similar_words(char * str);
+void print_similar_words();
 
-int run_options(char option, char* str);
+int run_options(char option);
 
 int main() {
 
-    char str[WORD], choice;
+    char choice;
     getword(str);
     scanf(" %c\n", &choice);
-    if (!run_options(choice,str)){
+    if (!run_options(choice)){
         printf ("%c is not an option!",choice);
     }
     return 0;
 }
 
-int get_line(char str[]){
+int get_line(){
     int i = 0;
     for(i=0;i<LINE;i++){
-        if(scanf("%c" , (str+i))== EOF){
-            *(str+i) = '\0';
+        if(scanf("%c" , (Line+i))== EOF){
+            *(Line+i) = '\0';
             break;
         }
-        if(*(str+i) == '\n'){
-            *(str+(++i)) = '\0';
+        if(*(Line+i) == '\n'){
+            *(Line+(++i)) = '\0';
             break;
         }
     }
@@ -105,8 +104,8 @@ int similar(char *s, char *t, int n) {
 }
 
 
-void print_lines(char* str){
-    while(get_line(Line)){
+void print_lines(){
+    while(get_line()){
         if(substring(Line,str)){
             printf("%s",Line);
         }
@@ -114,14 +113,14 @@ void print_lines(char* str){
 }
 
 
-void print_similar_words(char * str) {
+void print_similar_words() {
     while (getword(Word)) {
         if (similar(Word, str, 0) || similar(Word, str, 1))
             printf("%s\n", Word);
     }
 }
 
-int run_options(char option, char *str) {
+int run_options(char option) {
     switch (option) {
         case OPTION1:
             print_lines(str);
