@@ -10,6 +10,7 @@
 char Line[LINE] = "";
 char Word[WORD] = "";
 char str[WORD] = "";
+char option;
 
 int get_line();
 
@@ -23,15 +24,14 @@ void print_lines();
 
 void print_similar_words();
 
-int run_options(char option);
+int run_options();
 
 int main() {
-
-    char choice;
+    
     getword(str);
-    scanf(" %c\n", &choice);
-    if (!run_options(choice)){
-        printf ("%c is not an option!",choice);
+    scanf(" %c\n", &option);
+    if (!run_options()){
+        printf ("%c is not an option!",option);
     }
     return 0;
 }
@@ -120,7 +120,7 @@ void print_similar_words() {
     }
 }
 
-int run_options(char option) {
+int run_options() {
     switch (option) {
         case OPTION1:
             print_lines(str);
