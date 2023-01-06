@@ -11,38 +11,68 @@
 
 int main(){
 
-    int checkWord(char *word, char*str){
-        int count = 0;
-        char* tmp = str;
-        char result[WORD]="";
-        if(strlen(str) != strlen(word) && strlen(str)+1 != strlen(word) ){
+    int checkWord(char *word, char*str,int strl) {
+        int count = 0, wordl = 0;
+        char *tmp = str;
+        char result[WORD] = "";
+        if (!word) {
+            word = "";
+        } else {
+            wordl = strlen(word);
+        }
+        if (!str) {
+            str = "";
+            strl=0;
+        }
+
+
+//        if(word && str){
+//            //printf("word:%s, str:%s\n",word,str);
+//            strl =strlen(str);
+//            wordl = strlen(word);
+//        }
+//        else{
+//            return 0;
+//        }
+
+        if (strl != wordl && strl + 1 != wordl) {
             return 0;
         }
-        while(*word!= '\t' && *word!= '\n' && *word!= '\0' && *tmp!= '\t' && *tmp!= '\n' && *tmp!= '\0'){
-            if(*word==*tmp){
-                *(result+count)=*word;
+        while (*result && *word && *tmp  && *word != '\0' && *tmp != '\0') {
+            if (*word == *tmp) {
+                *(result + count) = *word;
                 tmp++;
                 count++;
             }
             word++;
         }
-        return(strcmp(result,str)==0);
+        if (result != NULL && *result!= '\0') {
+            int n = strlen(result);
+            if(n == strl)
+            return 1;
+        }
+        return 0;
     }
 
-    int applyLine(char*sentence, char*str, char c){
+    int applyLine(char*sentence, char*str, char c, int strl){
         int ans=0;
-        char ptr[strlen(sentence)+1];
-        for(int i=0; i<strlen(sentence)+1; i++){
-            ptr[i] = *(sentence+i);
-        }
-        ptr[strlen(sentence)]=' ';
-        char *start= NULL, *end = NULL;
-        start = ptr;
-        end =  &ptr[strlen(ptr)];
-        while (end!= NULL && *end != '\0') {
+//        char ptr[strlen(sentence)+1];
+//        for(int i=0; i<strlen(sentence)+1; i++){
+//            ptr[i] = *(sentence+i);
+//        }
+//        ptr[strlen(sentence)]=' ';
+        char *start= sentence, *end = sentence;
+//        start = ptr;
+//        end =  ptr;
+        //printf("end:%s, start:%s",end,start);
+        while (start && end!= NULL && *end != '\0') {
+            int sl= 0;
             if (*end == ' ') {
                 *end = '\0';
-                if(checkWord(start,str)){
+                if(start){
+                    sl = strlen(start);
+                }
+                if(sl>0 && checkWord(start,str, strl)){
                     ans=1;
                     if( c== OPTION2){
                         printf("%s\n", start);
@@ -63,7 +93,7 @@ int main(){
 
     char ch,option;
     char str [WORD];
-    int i=0;
+    int i=0, strl=0;
     scanf("%c",&ch);
     while(ch != ' ')
     {
@@ -71,6 +101,7 @@ int main(){
         i++;
         scanf("%c",&ch);
     }
+    strl = i;
     scanf("%c",&option);
     while( scanf("%c",&ch)) {
         if (ch =='\n'){
@@ -86,11 +117,15 @@ int main(){
             line[i]=ch;
             i++;
             scanf("%c",&ch);
+            if(i==LINE-2){
+                break;
+            }
         }
+        line[i]=' ';
         if(*line=='\n'){
             break;
         }
-        applyLine(line,str,option);
+        applyLine(line,str,option, strl);
         if(++lines>MAXLINES){
             break;
         }
