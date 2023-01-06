@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 #define WORD 30
@@ -9,128 +7,126 @@
 #define OPTION1 'a'
 #define OPTION2 'b'
 
-int main(){
+char Line[LINE] = "";
+char Word[WORD] = "";
+char str[WORD] = "";
 
-    int checkWord(char *word, char*str,int strl) {
-        int count = 0, wordl = 0;
-        char *tmp = str;
-        char result[WORD] = "";
-        if (!word) {
-            word = "";
-        } else {
-            wordl = strlen(word);
-        }
-        if (!str) {
-            str = "";
-            strl=0;
-        }
+int get_line();
 
+int getword();
 
-//        if(word && str){
-//            //printf("word:%s, str:%s\n",word,str);
-//            strl =strlen(str);
-//            wordl = strlen(word);
-//        }
-//        else{
-//            return 0;
-//        }
+int substring(char * str1, char * str2);
 
-        if (strl != wordl && strl + 1 != wordl) {
-            return 0;
-        }
-        while (*result && *word && *tmp  && *word != '\0' && *tmp != '\0') {
-            if (*word == *tmp) {
-                *(result + count) = *word;
-                tmp++;
-                count++;
-            }
-            word++;
-        }
-        if (result != NULL && *result!= '\0') {
-            int n = strlen(result);
-            if(n == strl)
-            return 1;
-        }
-        return 0;
+int similar(char *s, char *t, int n);
+
+void print_lines();
+
+void print_similar_words();
+
+int run_options(char option);
+
+int main() {
+    getword(str);
+    char option;
+    scanf(" %c\n", &option);
+    if (!run_options(option)){
+        printf ("%c is not an option!",option);
     }
+    return 0;
+}
 
-    int applyLine(char*sentence, char*str, char c, int strl){
-        int ans=0;
-//        char ptr[strlen(sentence)+1];
-//        for(int i=0; i<strlen(sentence)+1; i++){
-//            ptr[i] = *(sentence+i);
-//        }
-//        ptr[strlen(sentence)]=' ';
-        char *start= sentence, *end = sentence;
-//        start = ptr;
-//        end =  ptr;
-        //printf("end:%s, start:%s",end,start);
-        while (start && end!= NULL && *end != '\0') {
-            int sl= 0;
-            if (*end == ' ') {
-                *end = '\0';
-                if(start){
-                    sl = strlen(start);
-                }
-                if(sl>0 && checkWord(start,str, strl)){
-                    ans=1;
-                    if( c== OPTION2){
-                        printf("%s\n", start);
-                    }
-                }
-                start = end + 1;
-                end = start;
-            }
-            else {
-                end++;
-            }
+int get_line(){
+    int i = 0;
+    for(i=0;i<LINE;i++){
+        if(scanf("%c" , (str+i))== EOF){
+            *(str+i) = '\0';
+            break;
         }
-        if(ans && c == OPTION1){
-            printf("%s\n",sentence);
-        }
-        return ans;
-    }
-
-    char ch,option;
-    char str [WORD];
-    int i=0, strl=0;
-    scanf("%c",&ch);
-    while(ch != ' ')
-    {
-        str[i]=ch;
-        i++;
-        scanf("%c",&ch);
-    }
-    strl = i;
-    scanf("%c",&option);
-    while( scanf("%c",&ch)) {
-        if (ch =='\n'){
+        if(*(str+i) == '\n'){
+            *(str+(++i)) = '\0';
             break;
         }
     }
-    int lines=0;
-    while( lines<MAXLINES && scanf("%c",&ch) && ch != EOF){
-        i=0;
-        char line [LINE]="";
-        while(ch != '\n')
-        {
-            line[i]=ch;
-            i++;
-            scanf("%c",&ch);
-            if(i==LINE-2){
+    return i;
+}
+
+int getword() {
+    int i = 0;
+    while (i < WORD){
+        if (scanf("%c", &Word[i]) == EOF || Word[i] == ' ' || Word[i] == '\t' || Word[i] == '\n'){
+            Word[i] = '\0';
+            break;
+        }
+        i++;
+    }
+    if (i == WORD)
+        Word[i - 1] = '\0';
+    return i;
+}
+
+int substring(char *str1, char *str2){
+    int flag = 0;
+    int tempSize = 0;
+    int size_str1 = strlen(str1);
+    int size_str2 = strlen(str2);
+    if(size_str1 < size_str2){
+        return flag;
+    }
+    for(int i=0;i<size_str1;i++){
+        for(int j=0;j<size_str2;j++) {
+            if (*(str1 + i + j) == *(str2 + j)) {
+                tempSize++;
+            }
+            else{
+                tempSize =0;
                 break;
             }
         }
-        line[i]=' ';
-        if(*line=='\n'){
-            break;
-        }
-        applyLine(line,str,option, strl);
-        if(++lines>MAXLINES){
+        if(tempSize == size_str2){
+            flag = 1;
             break;
         }
     }
+    return flag;
+}
+int similar(char *s, char *t, int n) {
+    int lens = strlen(s), lent = strlen(t), lenres = 0, i = 0;
+    if (lens != lent + n) {
+        return 0;
+    }
+    while (i < lens && lenres < lent){
+        if (*(s + i) == *(t + lenres))
+            lenres++;
+        i++;
+    }
+    return (lent == lenres);
+}
+
+
+void print_line(){
+    while(get_line(Line)){
+        if(substring(Line,str)){
+            printf("%s",Line);
+        }
+    }
+}
+
+
+void print_similar_words() {
+    while (getword()) {
+        if (similar(Word, str, 0) || similar(Word, str, 1))
+            printf("%s\n", Word);
+    }
+}
+
+int run_options(char option) {
+    switch (option) {
+        case OPTION1:
+            print_lines(str);
+            return 1;
+        case OPTION2:
+            print_similar_words(str);
+            return 1;
+    }
     return 0;
-
-
 }
