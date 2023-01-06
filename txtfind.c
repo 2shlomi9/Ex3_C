@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include <string.h>
 
 #define WORD 30
@@ -9,33 +11,33 @@
 
 char Line[LINE] = "";
 char Word[WORD] = "";
-char str[WORD] = "";
 
-int get_line();
+int get_line(char str[]);
 
-int getword();
+int getword(char word[]);
 
 int substring(char * str1, char * str2);
 
 int similar(char *s, char *t, int n);
 
-void print_lines();
+void print_lines(char * str);
 
-void print_similar_words();
+void print_similar_words(char * str);
 
-int run_options(char option);
+int run_options(char option, char* str);
 
 int main() {
+
+    char str[WORD], choice;
     getword(str);
-    char option;
-    scanf(" %c\n", &option);
-    if (!run_options(option)){
-        printf ("%c is not an option!",option);
+    scanf(" %c\n", &choice);
+    if (!run_options(choice,str)){
+        printf ("%c is not an option!",choice);
     }
     return 0;
 }
 
-int get_line(){
+int get_line(char str[]){
     int i = 0;
     for(i=0;i<LINE;i++){
         if(scanf("%c" , (str+i))== EOF){
@@ -50,17 +52,17 @@ int get_line(){
     return i;
 }
 
-int getword() {
+int getword(char word[]) {
     int i = 0;
     while (i < WORD){
-        if (scanf("%c", &Word[i]) == EOF || Word[i] == ' ' || Word[i] == '\t' || Word[i] == '\n'){
-            Word[i] = '\0';
+        if (scanf("%c", &word[i]) == EOF || word[i] == ' ' || word[i] == '\t' || word[i] == '\n'){
+            word[i] = '\0';
             break;
         }
         i++;
     }
     if (i == WORD)
-        Word[i - 1] = '\0';
+        word[i - 1] = '\0';
     return i;
 }
 
@@ -103,7 +105,7 @@ int similar(char *s, char *t, int n) {
 }
 
 
-void print_line(){
+void print_lines(char* str){
     while(get_line(Line)){
         if(substring(Line,str)){
             printf("%s",Line);
@@ -112,14 +114,14 @@ void print_line(){
 }
 
 
-void print_similar_words() {
-    while (getword()) {
+void print_similar_words(char * str) {
+    while (getword(Word)) {
         if (similar(Word, str, 0) || similar(Word, str, 1))
             printf("%s\n", Word);
     }
 }
 
-int run_options(char option) {
+int run_options(char option, char *str) {
     switch (option) {
         case OPTION1:
             print_lines(str);
